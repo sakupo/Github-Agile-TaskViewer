@@ -1,0 +1,33 @@
+{
+  "name": "GitHub-Ajile-TaskViewer β",
+  "version": "1.0",
+  "manifest_version": 2,
+  "description": "GitHub ProjectsのKanbanをストーリーポイントやタグ付け等によってよりAjile仕様にする拡張機能です．",
+  "permissions": [
+    "tabs", "https://github.com/*/projects/*"
+  ],
+  "icons": {
+    "32": "imgs/logo_32.png",
+    "64": "imgs/logo_64.png",
+    "96": "imgs/logo_96.png",
+    "128": "imgs/logo_128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://github.com/*/projects/*"
+      ],
+      "js": [
+        "js/main.js"
+      ],
+      "run_at": "document_end",
+      "all_frames": true
+    }
+  ],
+  "browser_action": {
+    "browser_style": true,
+    "default_title": "Tasks",
+    "default_popup": "html/popup.html",
+    "default_icon": "imgs/logo_32.png"
+  }
+}
