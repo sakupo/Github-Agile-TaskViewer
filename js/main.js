@@ -12,6 +12,7 @@ let no_of_tasks  = [0, 0, 0];
 let story_points = [0, 0, 0];
 let tags;
 let backlogs;
+let is_ready = false;
 
 // get DOM elements
 let p_es = document.getElementsByClassName('progress');
@@ -137,6 +138,8 @@ function createProgressBar() {
                                                                             + story_points[1] + "pt in progress / "
                                                                             + story_points[0] + "pt to do)");
   
+  
+  is_ready = true;
   sendResultMessage()
   setStatusText("Stoty Point Bar");
 
@@ -171,7 +174,9 @@ function sendCalculatingMessage(cont) {
 }
 
 function sendResultMessage() {
-  sendMessage("done", "Stoty Point Bar", {"tags": tags, "backlogs": backlogs});
+  if (is_ready) {
+    sendMessage("done", "Stoty Point Bar", {"tags": tags, "backlogs": backlogs});
+  }
 }
 
 /*
