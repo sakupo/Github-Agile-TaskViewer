@@ -65,7 +65,7 @@ function createTaskColumn(tasks, key, desc) {
   taskview_e.appendChild(flexitem_e);
 }
 
-// 現在アクティブなタブからポップアップのレンダーに必要な情報を要求．(tabs権限を使用)
+// 現在アクティブなタブからポップアップのレンダーに必要な情報を要求
 chrome.tabs.executeScript({code:"sendResultMessage()"});
 
 function sortTasksWithLabelAsc(tasks) {

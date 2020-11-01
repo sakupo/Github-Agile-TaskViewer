@@ -4,7 +4,7 @@
   "manifest_version": 2,
   "description": "GitHub ProjectsのKanbanをストーリーポイントやタグ付け等によってよりAjile仕様にする拡張機能です．",
   "permissions": [
-    "tabs", "https://github.com/*/projects/*"
+    "https://github.com/*/projects/*"
   ],
   "icons": {
     "32": "imgs/logo_32.png",
