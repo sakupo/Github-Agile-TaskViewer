@@ -25,37 +25,44 @@ function createTaskView(data) {
     taskview_e.removeChild(taskview_e.firstChild);
    }
   Object.keys(tags).forEach((key) => {
-    let sp = 0;
-    let flexitem_e = document.createElement("div");
-    let hcol_e = document.createElement("div");
-    let col_e = document.createElement("div");
+    if (key === "No tags") return;
     // items
     let tasks = tags[key].items.concat();
-    sortTasksWithLabelAsc(tasks);
-    tasks.forEach(item => {
-      let content = item.content;
-      let card_e = document.createElement("div");
-      switch (item.label_i) {
-        case 0: card_e.setAttribute("class", "card todo"); break;
-        case 1: card_e.setAttribute("class", "card inprogress"); break;
-        case 2: card_e.setAttribute("class", "card done"); break;
-        default: card_e.setAttribute("class", "card");
-      }
-      card_e.textContent = "["+item.sp+"pt] "+content;
-      col_e.appendChild(card_e);
-      sp += item.sp;
-    });
-    // column title
-    hcol_e.setAttribute("class", "column-title");
-    col_e.setAttribute("class", "column");
-    let card_e = document.createElement("h3");
-    card_e.setAttribute("class", "card");
-    card_e.textContent = key + ": " + tags[key].desc + "["+sp+"pt] ";
-    hcol_e.appendChild(card_e);
-    flexitem_e.appendChild(hcol_e);
-    flexitem_e.appendChild(col_e);
-    taskview_e.appendChild(flexitem_e);
+    createTaskColumn(tasks, key, tags[key].desc);
   });
+  createTaskColumn(tags["No tags"].items.concat(), "No tags", tags["No tags"].desc);
+}
+
+function createTaskColumn(tasks, key, desc) {
+  let sp = 0;
+  let flexitem_e = document.createElement("div");
+  let hcol_e = document.createElement("div");
+  let col_e = document.createElement("div");
+  
+  sortTasksWithLabelAsc(tasks, key);
+  tasks.forEach(item => {
+    let content = item.content;
+    let card_e = document.createElement("div");
+    switch (item.label_i) {
+      case 0: card_e.setAttribute("class", "card todo"); break;
+      case 1: card_e.setAttribute("class", "card inprogress"); break;
+      case 2: card_e.setAttribute("class", "card done"); break;
+      default: card_e.setAttribute("class", "card");
+    }
+    card_e.textContent = "["+item.sp+"pt] "+content;
+    col_e.appendChild(card_e);
+    sp += item.sp;
+  });
+  // column title
+  hcol_e.setAttribute("class", "column-title");
+  col_e.setAttribute("class", "column");
+  let card_e = document.createElement("h3");
+  card_e.setAttribute("class", "card");
+  card_e.textContent = key + ": " + desc + " ["+sp+"pt]";
+  hcol_e.appendChild(card_e);
+  flexitem_e.appendChild(hcol_e);
+  flexitem_e.appendChild(col_e);
+  taskview_e.appendChild(flexitem_e);
 }
 
 chrome.tabs.executeScript(null, {code:"sendResultMessage()"});

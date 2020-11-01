@@ -4,6 +4,9 @@ window.addEventListener("load", main, false);
 window.addEventListener("submit", update, false);
 
 const NOTAGS = "No tags"
+const labels = [/To do/, /In progress/, /Done/, /Backlog/];
+const sp_pattern = /\[[1-9]\d*pt\]/g;
+const tag_pattern = /\[\w+\.\]/gu;
 
 let no_of_tasks  = [0, 0, 0];
 let story_points = [0, 0, 0];
@@ -16,6 +19,7 @@ let done_bar_e = p_es[0];// as HTMLElement;
 let in_progress_bar_e = p_es[1];// as HTMLElement;
 let task_text_e = p_es[0].parentNode.parentNode;// as HTMLElement;
 let task_abstract_e = task_text_e.parentNode.parentNode.parentNode;//for ts as HTMLElement;
+task_text_e.parentNode.removeAttribute("class"); // Stop original update
 
 function init() {
   no_of_tasks.fill(0);
@@ -36,12 +40,17 @@ function update() {
   window.setTimeout(createProgressBar, 5000);
 }
 
+function getContent(card) {
+  return card.firstElementChild.nextElementSibling.firstElementChild.firstElementChild.firstElementChild.nextElementSibling.nextElementSibling.firstElementChild.firstElementChild.firstElementChild.textContent;
+}
+
+function formatContent(content) {
+  return content.replace(sp_pattern, '').replace(tag_pattern, '').replace(/\[\"/g, '').replace(/\"\]/g, '').replace(/\",\"/g, '').trim();
+}
+
 function getColumn() {
   init();
-  const labels = [/To do/, /In progress/, /Done/, /Backlog/];
   let c_es = document.getElementsByClassName('project-column');
-  let sp_pattern = /\[[1-9]\d*pt\]/g;
-  let tag_pattern = /\[\w+\.\]/gu;
   for (let i = 0; i < c_es.length; i++) { // Each column
     let name = c_es[i].getElementsByClassName('js-add-note-container')[0].childNodes[1].getElementsByTagName('h3')[0].textContent.trim();
     let label_i = -1; 
@@ -59,24 +68,25 @@ function getColumn() {
         case 0: case 1: case 2: // To do or In progress or Done
           let sp = 0;
           for (let j = 0; j < items.length; j++) { // Each tasks
-            let title = items[j].getAttribute("data-card-title");
-            let title_f = title.replace(sp_pattern, '').replace(tag_pattern, '').replace(/\["/g, '').replace(/"\]/g, '').replace(/\",\"/g, '');
-            let pt_str = title.match(sp_pattern);
+            let content = getContent(items[j]);
+            let content_f = formatContent(content);
+            let pt_str = content.match(sp_pattern);
             let pt = (pt_str == null) ? 1 : Number(pt_str[0].substr(1, pt_str[0].length-4));
             sp += pt;
             // tags
-            let tag_str = title.match(tag_pattern);
+            let tag_str = content.match(tag_pattern);
             if (tag_str !== undefined && tag_str !== null) {
               tag_str.forEach(t => {
                 let t_f = t.substr(1, tag_str[0].length-3);
                 if (tags[t_f] !== undefined && tags[t[0]] !== null) {
-                  tags[t_f]["items"].push({"content": title_f, "sp": pt, "label_i": label_i});
+                  console.log(content_f);
+                  tags[t_f]["items"].push({"content": content_f, "sp": pt, "label_i": label_i});
                 } else {
-                  tags[t_f] = {"items": [title_f], "desc": "No description"}
+                  tags[t_f] = {"items": [content_f], "desc": "No description"}
                 }
               });
             } else {
-              tags[NOTAGS]["items"].push({"content": title_f, "sp": pt});
+              tags[NOTAGS]["items"].push({"content": content_f, "sp": pt});
             }
           }
           no_of_tasks[label_i] += items.length;
@@ -84,15 +94,15 @@ function getColumn() {
           break;
         case 3: // Backlog
           for (let j = 0; j < items.length; j++) { // Each tasks           
-            let title = items[j].getAttribute("data-card-title");
-            let title_f = title.replace(sp_pattern, '').replace(tag_pattern, '').replace(/\[\"/g, '').replace(/\"\]/g, '').replace(/\",\"/g, '');
-            let tag_str = title.match(tag_pattern);
+            let content = getContent(items[j]);
+            let content_f = formatContent(content);
+            let tag_str = content.match(tag_pattern);
             if (tag_str !== undefined && tag_str !== null) {
               let tag_str_f = tag_str[0].substr(1, tag_str[0].length-3);
               if (tags[tag_str_f] !== undefined && tags[tag_str_f] !== null) {
-                tags[tag_str_f]["desc"] = title_f;
+                tags[tag_str_f]["desc"] = content_f;
               } else {
-                tags[tag_str_f] = {"items": [], "desc": title_f};
+                tags[tag_str_f] = {"items": [], "desc": content_f};
               }
             }
           }
@@ -108,6 +118,9 @@ function createProgressBar() {
   let total_story_points = 0;
   for (let i = 0; i < story_points.length; i++) {
     total_story_points += story_points[i];
+  }
+  if (total_story_points == 0) {
+    total_story_points = 1; // avoid division by zero
   }
 
   // calculate sp ratio
