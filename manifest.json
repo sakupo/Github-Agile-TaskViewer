@@ -1,8 +1,8 @@
 {
-  "name": "GitHub-Ajile-TaskViewer β",
-  "version": "0.0.0.2",
+  "name": "GitHub Agile TaskViewer",
+  "version": "0.0.0.3",
   "manifest_version": 2,
-  "description": "GitHub ProjectsのKanbanをストーリーポイントやタグ付け等によってよりAjile仕様にする拡張機能です．",
+  "description": "GitHub ProjectsのKanbanをストーリーポイントやタグ付け等によってよりアジャイル仕様にする拡張機能です．",
   "permissions": [
     "https://github.com/*/projects/*"
   ],
