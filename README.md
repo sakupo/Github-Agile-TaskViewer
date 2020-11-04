@@ -1,5 +1,5 @@
-# GitHub-Ajile-TaskViewer β
-GitHub ProjectsのKanbanをストーリーポイントやタグ付け等によってよりAjile仕様にする拡張機能です．
+# GitHub-Agile-TaskViewer
+GitHub ProjectsのKanbanをストーリーポイントやタグ付け等によってよりアジャイル仕様にする拡張機能です．
 
 ## 使い方/How to use
 - Github Projectsを作成します．
