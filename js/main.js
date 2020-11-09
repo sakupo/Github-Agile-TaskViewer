@@ -5,6 +5,8 @@ window.addEventListener("submit", update, false);
 
 const NOTAGS = "No tags"
 const labels = [/To do/, /In progress/, /Done/, /Backlog/];
+const labelBgColorsHex = ["#f1f1f1", "#6F42C1", "#4CA746", "#f1f1f1"];
+const labelColorsHex = ["#0e0e0e", "#6F42C1", "#4CA746", "#0e0e0e"];
 const sp_pattern = /\[[1-9]\d*pt\]/g;
 const tag_pattern = /\[\w+\.\]/gu;
 
@@ -53,7 +55,8 @@ function getColumn() {
   init();
   let c_es = document.getElementsByClassName('project-column');
   for (let i = 0; i < c_es.length; i++) { // Each column
-    let name = c_es[i].getElementsByClassName('js-add-note-container')[0].childNodes[1].getElementsByTagName('h3')[0].textContent.trim();
+    const column_head_es = c_es[i].getElementsByClassName('js-add-note-container')[0].childNodes[1]
+    let name = column_head_es.getElementsByTagName('h3')[0].textContent.trim();
     let label_i = -1; 
     for (let j = 0; j < labels.length; j++) { 
       let is_match = name.match(labels[j]);
@@ -63,7 +66,7 @@ function getColumn() {
       }
     } 
     if (label_i >= 0) {
-      console.log(name);
+      //console.log(name);
       let items = c_es[i].getElementsByClassName('js-project-column-cards')[0].getElementsByTagName('article')
       switch (label_i) {
         case 0: case 1: case 2: // To do or In progress or Done
@@ -80,7 +83,7 @@ function getColumn() {
               tag_str.forEach(t => {
                 let t_f = t.substr(1, tag_str[0].length-3);
                 if (tags[t_f] !== undefined && tags[t[0]] !== null) {
-                  console.log(content_f);
+                  //console.log(content_f);
                   tags[t_f]["items"].push({"content": content_f, "sp": pt, "label_i": label_i});
                 } else {
                   tags[t_f] = {"items": [content_f], "desc": "No description"}
@@ -92,6 +95,15 @@ function getColumn() {
           }
           no_of_tasks[label_i] += items.length;
           story_points[label_i] += sp;
+          let head_sp_e = column_head_es.getElementsByTagName("h4")[0];
+          console.log(head_sp_e);
+          if (head_sp_e === null || head_sp_e === undefined) {
+            head_sp_e = document.createElement("h4");
+            head_sp_e.setAttribute("class", `js-column-card-count Counter Counter--gray-light position-relative v-align-middle ml-1`);
+            head_sp_e.setAttribute("style", "color: "+labelColorsHex[label_i]+";")
+            column_head_es.appendChild(head_sp_e);
+          }
+          head_sp_e.textContent = sp + "pt";
           break;
         case 3: // Backlog
           for (let j = 0; j < items.length; j++) { // Each tasks           
@@ -144,7 +156,7 @@ function createProgressBar() {
   setStatusText("Stoty Point Bar");
 
   // debug
-  console.log(tags);
+  //console.log(tags);
 }
 
 function createProgressBarText() {
