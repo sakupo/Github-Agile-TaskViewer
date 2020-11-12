@@ -77,6 +77,7 @@ function getColumn() {
             let pt_str = content.match(sp_pattern);
             let pt = (pt_str == null) ? 1 : Number(pt_str[0].substr(1, pt_str[0].length-4));
             sp += pt;
+            let item = {"content": content_f, "sp": pt, "label_i": label_i};
             // tags
             let tag_str = content.match(tag_pattern);
             if (tag_str !== undefined && tag_str !== null) {
@@ -84,13 +85,13 @@ function getColumn() {
                 let t_f = t.substr(1, tag_str[0].length-3);
                 if (tags[t_f] !== undefined && tags[t[0]] !== null) {
                   //console.log(content_f);
-                  tags[t_f]["items"].push({"content": content_f, "sp": pt, "label_i": label_i});
+                  tags[t_f]["items"].push(item);
                 } else {
-                  tags[t_f] = {"items": [content_f], "desc": "No description"}
+                  tags[t_f] = {"items": [item], "desc": ""}
                 }
               });
             } else {
-              tags[NOTAGS]["items"].push({"content": content_f, "sp": pt});
+              tags[NOTAGS]["items"].push(item);
             }
           }
           no_of_tasks[label_i] += items.length;
