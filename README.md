@@ -5,7 +5,7 @@ GitHub ProjectsのKanbanをストーリーポイントやタグ付け等によ�
 - Github Projectsを作成します．
 - タグを作成するには`Backlog`という名前を含むcolumnにcardを以下の形式で追加します．
   ```
-  [TagName.] Tag description
+  [TagName.] TagDescription
   ```
   例えば，
   ```
