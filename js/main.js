@@ -43,8 +43,23 @@ function update() {
   window.setTimeout(createProgressBar, 5000);
 }
 
-function getContent(card) {
-  return card.firstElementChild.nextElementSibling.firstElementChild.firstElementChild.firstElementChild.nextElementSibling.nextElementSibling.firstElementChild.firstElementChild.firstElementChild.textContent;
+function getCardContent(card) {
+  let content;
+  let text;
+  let attrText = "";
+  // 通常のカード
+  content = card.querySelector(".js-comment-body");
+  // issue & pull request カード
+  if (content == null) {
+    content = card.querySelector(".markdown-title");
+    const attr = content.getAttribute("data-content-label");
+    console.log(attr);
+    if (attr === "issue" || attr === "pull request") {
+      attrText = " ["+attr+"]";
+    }
+  }
+  text = content.textContent + attrText;
+  return text;
 }
 
 function formatContent(content) {
@@ -72,7 +87,7 @@ function getColumn() {
         case 0: case 1: case 2: // To do or In progress or Done
           let sp = 0;
           for (let j = 0; j < items.length; j++) { // Each tasks
-            let content = getContent(items[j]);
+            let content = getCardContent(items[j]);
             let content_f = formatContent(content);
             let pt_str = content.match(sp_pattern);
             let pt = (pt_str == null) ? 1 : Number(pt_str[0].substr(1, pt_str[0].length-4));
@@ -108,7 +123,7 @@ function getColumn() {
           break;
         case 3: // Backlog
           for (let j = 0; j < items.length; j++) { // Each tasks           
-            let content = getContent(items[j]);
+            let content = getCardContent(items[j]);
             let content_f = formatContent(content);
             let tag_str = content.match(tag_pattern);
             if (tag_str !== undefined && tag_str !== null) {
