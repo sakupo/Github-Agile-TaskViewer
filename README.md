@@ -1,4 +1,6 @@
 # GitHub-Agile-TaskViewer
+[chrome webstore - GitHub-Agile-TaskViewer](https://chrome.google.com/webstore/detail/github-agile-taskviewer/nhebljkbdjblnjlmocfdohhiiccpipja)
+
 GitHub ProjectsのKanbanをストーリーポイントやタグ付け等によってよりアジャイル仕様にする拡張機能です．
 
 ## 使い方/How to use
